@@ -1,0 +1,24 @@
+{
+  "name": "accounts-service",
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "scripts": {
+    "start": "concurrently \"npm run start --workspace frontend\" \"npm run start --workspace backend\"",
+    "build": "npm run build --workspace frontend && npm run build --workspace backend",
+    "dev": "concurrently \"npm run dev --workspace frontend\" \"npm run dev --workspace backend\"",
+    "test": "npm run test --workspace frontend && npm run test --workspace backend",
+    "lint": "eslint 'frontend/**/*.{ts,tsx}' 'backend/**/*.{ts,tsx}' --fix",
+    "format": "prettier --write \"frontend/**/*.{ts,tsx,js,css}\" \"backend/**/*.{ts,tsx,js}\"",
+    "clean": "rm -rf frontend/dist && rm -rf backend/dist"
+  },
+  "dependencies": {
+    "concurrently": "^9.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^9.22.0",
+    "prettier": "^3.5.3",
+    "typescript": "^5.8.2"
+  }
+}
