@@ -1,16 +1,32 @@
-import express from "express";
-import dotenv from "dotenv";
+import express from 'express';
+import { port } from './config/config';
+import authRoute from './v1/routes/authRoute';
+import { getDBConnection } from './config/db';
 
-// Load env variables
-dotenv.config();
-
+// Create the express app
 const app = express();
-const port = process.env.PORT || 3000;
 
 // App uses
+app.use(express.json());
 
-// App routes
+// Routes
+app.use('/v1/auth', authRoute);
 
-app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+// Start the server
+const server = app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
+});
+
+// Graceful shutdown
+process.on('SIGINT', async () => {
+    console.log('Shutting down gracefully...');
+    const pool = await getDBConnection();
+    if (pool) {
+        await pool.end();
+        console.log('MySQL connection pool closed.');
+    }
+    server.close(() => {
+        console.log('Server closed.');
+        process.exit(0);
+    });
 });
